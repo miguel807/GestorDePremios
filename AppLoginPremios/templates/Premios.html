@@ -1,0 +1,232 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<head>
+    <style>
+        h2,p{
+            color: white;
+        }
+        a{
+            font-size: 15px;
+            margin-left: 20px;
+            color: blueviolet;
+        }
+       
+    </style>
+
+
+
+</head>
+
+
+{%block content%}
+
+{% if user.is_staff%}
+    {% if user.is_staff %}
+    <div class="container" style="position: fixed;margin-left:90%;margin-top: 0%">
+       <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" id="agg">Añadir Premio</button>
+
+    </div>
+{% endif %}
+    <h4 style="margin-left: 10% ;margin-bottom:30px; color:white;">Premios: </h4>
+    {%else%}
+
+    <h4 style="margin-left: 10% ;margin-bottom:30px; color:white;">Tus premios: </h4>
+
+    {% endif%}
+
+
+    <form  method="POST" name="formulario">
+        {%csrf_token%}
+        <input type="hidden" value="{{user.id}}" name="valueID">
+    </form>
+
+
+
+   <div class="bd-example-snippet bd-code-snippet" style="background-color:rgb(179, 180, 196); width:80%;margin:auto;padding-left:20px;"><div class="bd-example">
+        <table class="table table-striped table-hover table-dark table-borderless">
+          <thead >
+          <tr style="padding-left:20%;">
+            <th scope="col" >#</th>
+            <th scope="col">NOMBRE ARTISTA</th>
+            <th scope="col">NOMBRE OBRA</th>
+            <th scope="col">FACULTAD</th>
+            <th scope="col">PREMIO</th>
+            <th scope="col">MANIFESTACIÓN</th>
+              {% if user.is_staff %}
+            <th scope="col">EDITAR</th>
+              <th scope="col">ELIMINAR</th>
+              {%endif%}
+
+          </tr>
+          </thead>
+
+          <tbody>
+
+          {% if user.is_staff %}
+          {% for dato in datos %}
+          <tr>
+              <th  scope="row">{{forloop.counter}}</th>
+              <td>{{dato.user}}</td>
+              <td>{{dato.nombreObra}}</td>
+              <td>{{dato.facultad}}</td>
+              <td>{{dato.premio}}</td>
+              <td> {{dato.manifestacion}}</td>
+
+              {% if user.is_staff%}
+              <td>
+                   <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#{{dato.user}}">Editar</button>
+                  <form action="#" method="POST">
+                      {% csrf_token %}
+                      <input type="hidden" value="{{dato.id}}" name="obraId">
+                      <input type="hidden" value="{{dato.user}}" name="nombreUserInput">
+                      <input type="hidden" value="{{dato.nombreObra}}" name="nombreObra">
+
+
+                    <div class="modal fade"  tabindex="-1" aria-hidden="true" id="{{dato.user}}" >
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content rounded-4 shadow " style=" background-color: #031d2e;">
+                          <div class="modal-header border-bottom-0 "  >
+                            <h1 class="modal-title fs-5" style="color: rgb(175, 172, 172);">EDITAR</h1>
+                           
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <hr style="color:white;height: 2px;">
+                          <div class="modal-body py-0"  >
+                             <div class="modal-footer flex-column border-top-0">
+
+                                <input type="hidden" value="{{dato.id}}" name="obraId">
+                                <div class="form-floating mb-3">
+                                  <input style="background-color:  rgb(164, 185, 210);" type="text" style="color:black;" class="form-control rounded-3" id="floatingPassword" name="nombreObraE" placeholder="Nombre Obra" value="{{dato.nombreObra}}">
+                                  <label for="floatingPassword" style="color:black;">Nombre Obra</label>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                  <input style="background-color: rgb(164, 185, 210); " type="text"  style="color:black;" class="form-control rounded-3" id="floatingPassword" name="facultadE" placeholder="facultad" value="{{dato.facultad}}">
+                                  <label for="floatingPassword" style="color:black;">Facultad</label>
+
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                  <input style="background-color:rgb(164, 185, 210);" type="text" style="color:black;" class="form-control rounded-3" id="floatingPassword" name="premioE" placeholder="Premio" value="{{dato.premio}}">
+                                  <label for="floatingPassword" style="color:black;">Premio</label>
+
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                  <input style="background-color:rgb(164, 185, 210);" type="text" style="color:black;" class="form-control rounded-3" id="floatingPassword" name="manifestacionE" placeholder="manifestacion" value="{{dato.manifestacion}}">
+                                  <label for="floatingPassword" style="color:black;">Manifestación</label>
+                                </div>
+
+                              <input type="submit" style="margin-top: 20px;color: rgb(175, 172, 172);"  class="btn btn-primary" value="Editar" onclick="alert('Editado correctamente por favor actualice')" style="padding: 0px 5px;">
+                          </div>
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="b-example-divider"></div>
+                      </form>
+
+              </td>
+
+
+              <td><form action="{% url 'Home'%}" method="GET">
+                  <input type="hidden" value="{{dato.id}}" name="obraId">
+                  <input type="hidden" value="{{dato.user}}" name="nombreUserInput">
+                  <input type="hidden" value="{{dato.nombreObra}}" name="nombreObra">
+                  <input type="hidden" value="{{dato.premio}}" name="nombrePremio">
+                  <input  class="btn btn-primary"  type="submit" value="Eliminar" name="eliminar" onclick="alert('Premio eliminado')">
+                 </form>
+              </td>
+
+                {%endif%}
+
+          </tr>
+
+              {% endfor %}
+          {%else%}
+
+              {% for dato in datos %}
+          <tr>
+              <th scope="row">{{forloop.counter}}</th>
+              <td>{{dato.user}}</td>
+              <td>{{dato.nombreObra}}</td>
+              <td>{{dato.facultad}}</td>
+              <td>{{dato.premio}}</td>
+              <td> {{dato.manifestacion}}</td>
+          </tr>
+
+              {% endfor %}
+
+          {%endif%}
+
+          </tbody>
+        </table>
+        </div></div>
+
+{% if cantidad == 0 and not user.is_staff %}
+    <h4 style="margin-left:10%; color:white" >No tiene premios disponibles</h4>
+{%endif%}
+
+
+
+
+<form action="{% url 'Home' %}" method="POST">
+    {% csrf_token %}
+<div class="offcanvas offcanvas-end" style="background-color: #031d2e;" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+  <div class="offcanvas-header">
+    <h5 id="offcanvasRightLabel" style="color: rgb(175, 172, 172);">Añadir premio</h5>
+    <button type="button"  class="btn-close btn-close-white  text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body" >
+       <div id="cuadro">
+      <div class="mb-3" >
+        <label for="exampleFormControlInput1" style="color: rgb(175, 172, 172);" class="form-label" >Nombre del artista</label>
+        <input type="text" style="background-color:rgb(164, 185, 210);" class="form-control" id="exampleFormControlInput1" required placeholder="Nombre del artista" name="newPremioArtista">
+      </div>
+      <div class="mb-3">
+        <label for="exampleFormControlInput1" style="color: rgb(175, 172, 172);" class="form-label">Nombre de la obra</label>
+        <input type="text" style="background-color:rgb(164, 185, 210);;color: black;" class="form-control" id="exampleFormControlInput1" required placeholder="Nombre de la obra " name="newPremioNombreObra">
+      </div>
+           <input style="background-color:rgb(164, 185, 210);" class="form-select" required aria-label="Default select example" name="newPremio" placeholder="Premio" type="text"  list="opc">
+                <datalist id="opc">
+                    <option value="Oro"></option>
+                    <option value="Plata"></option>
+                    <option value="Bronce"></option>
+                    <option value="Mencion"></option>
+                </datalist>
+      <br>
+       <input style="background-color:rgb(164, 185, 210);" class="form-select" required aria-label="Default select example" name="newPremioFacultad" placeholder="Facultad" type="text"  list="opc1">
+                <datalist id="opc1">
+                    <option value="1"></option>
+                    <option value="2"></option>
+                    <option value="3"></option>
+                    <option value="4"></option>
+                    <option value="FTE"></option>
+                    <option value="CITEC"></option>
+                </datalist>
+
+      <br>
+
+       <input style="background-color:rgb(164, 185, 210);" class="form-select" required aria-label="Default select example" name="newPremioManifestacion" placeholder="Manifestacion" type="text"  list="opc2">
+                <datalist id="opc2">
+                    <option value="Danza"></option>
+                    <option value="Teatro"></option>
+                    <option value="Canto"></option>
+                    <option value="Artes Plásticas"></option>
+                </datalist>
+      <div id="trio">
+      <input type="submit" class="btn btn-primary" value="Insertar" onclick="alert('Premio Insertado Correctamente')" style="margin-top: 5%;color: rgb(175, 172, 172);">
+      </div>
+    </div>
+  </div>
+
+</div></form>
+
+
+
+
+
+{%endblock%}

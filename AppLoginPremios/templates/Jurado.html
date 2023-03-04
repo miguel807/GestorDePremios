@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content%}
+    <h4 style="margin-left: 10% ;margin-bottom:30px; color:white;">Jurado: </h4>
+     <div class="container" style="position: fixed;margin-left:90%;margin-top: -4%">
+       <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" id="agg">Añadir Jurado</button>
+
+    </div>
+    <div class="bd-example-snippet bd-code-snippet" style="background-color:rgb(179, 180, 196); width:80%;margin:auto;padding-left:20px;"><div class="bd-example">
+        <table class="table table-striped table-hover table-dark table-borderless">
+          <thead >
+          <tr style="padding-left:20%;">
+            <th scope="col" >#</th>
+            <th scope="col">NOMBRE JURADO</th>
+            <th scope="col">OCUPACION</th>
+            <th scope="col">MANIFESTACION</th>
+            <th scope="col">ELIMINAR</th>
+          </tr>
+          </thead>
+
+          <tbody>
+          {% for dato in datos%}
+          <tr>
+              <th  scope="row">{{forloop.counter}}</th>
+              <td>{{dato.nombreJurado}}</td>
+              <td>{{dato.ocupacion}}</td>
+              <td>{{dato.manifestacionArtistica}}</td>
+               <td><form action="{% url 'Home'%}" method="GET">
+                  <input type="hidden" value="{{dato.id}}" name="juradoID">
+                  <input  class="btn btn-primary"  type="submit" value="Eliminar" name="eliminar" onclick="alert('jurado eliminado')">
+                 </form>
+              </td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+        </div></div>
+
+
+
+<form action="{% url 'Home' %}" method="POST">
+    {% csrf_token %}
+<div class="offcanvas offcanvas-end" style="background-color: #031d2e;" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+  <div class="offcanvas-header">
+    <h5 id="offcanvasRightLabel" style="color: rgb(175, 172, 172);">Añadir Jurado</h5>
+    <button type="button"  class="btn-close btn-close-white  text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body" >
+       <div id="cuadro">
+      <div class="mb-3" >
+        <label for="exampleFormControlInput1" style="color: rgb(175, 172, 172);" class="form-label" >Nombre del Jurado</label>
+        <input type="text" style="background-color: rgb(164, 185, 210);;" class="form-control" id="exampleFormControlInput1" required placeholder="Nombre del Jurado" name="newNombreJurado">
+      </div>
+      <div class="mb-3">
+        <label for="exampleFormControlInput1" style="color: rgb(175, 172, 172);" class="form-label">Ocupacion</label>
+        <input type="text" style="background-color:rgb(164, 185, 210);;color: black;" class="form-control" id="exampleFormControlInput1" required placeholder="Ocupacion " name="newOcupacion">
+      </div>
+       <div class="mb-3">
+        <label for="exampleFormControlInput1" style="color: rgb(175, 172, 172);" class="form-label">Manifestacion Artistica</label>
+        <input type="text" style="background-color: rgb(164, 185, 210);; color: black;" class="form-control" id="exampleFormControlInput1" required placeholder="manifestacion Artistica " name="newmanifestacion">
+      </div>
+
+      <div id="trio">
+      <input type="submit" class="btn btn-primary" value="Insertar" onclick="alert('Jurado Insertado Correctamente')" style="margin-top: 5%;color: rgb(175, 172, 172);">
+      </div>
+    </div>
+  </div>
+</div></form>
+
+
+{% endblock %}
